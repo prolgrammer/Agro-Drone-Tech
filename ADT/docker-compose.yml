@@ -1,38 +1,65 @@
 version: '3.8'
 
 services:
-  zookeeper:
-    image: bitnami/zookeeper:latest
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    ports:
-      - "2181:2181"
-
   kafka:
     image: bitnami/kafka:latest
     ports:
       - "9092:9092"
+      - "9093:9093"
     environment:
-      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      ALLOW_PLAINTEXT_LISTENER: "yes"
-    depends_on:
-      - zookeeper
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    volumes:
+      - ./data/kafka:/bitnami/kafka
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - kafka_network
 
   producer:
     build: ./producer
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
+    environment:
+      - KAFKA_BROKER=kafka:9092
     volumes:
-      - ./producer/images_to_send:/app/images_to_send  # Папка с изображениями для отправки
+      - ./producer/images_to_send:/app/images_to_send
+#    entrypoint: >
+#      /bin/bash -c "
+#      while ! kafka-topics.sh --bootstrap-server kafka:9092 --list; do sleep 5; done;
+#      python producer.py"
+    networks:
+      - kafka_network
+    restart: "no"
 
   consumer:
     build: ./consumer
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
+    environment:
+      - KAFKA_BROKER=kafka:9092
     volumes:
-      - ./consumer/model:/app/model  # Монтируем папку модели в контейнере
+      - ./consumer/model:/app/model
+#    entrypoint: >
+#      /bin/bash -c "
+#      while ! kafka-topics.sh --bootstrap-server kafka:9092 --list; do sleep 5; done;
+#      python consumer.py"
+    networks:
+      - kafka_network
+    restart: always
+
 networks:
-  default:
-    name: kafka_network
+  kafka_network:
+    driver: bridge

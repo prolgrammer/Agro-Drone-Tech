@@ -21,6 +21,9 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2oQWYOWuGqmMFg7PahUPLviX6DD" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -29,7 +32,8 @@
   "keyToString": {
     "Python.consumer.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/ib1te/Desktop/3 course/aks/ADT",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/ib1te/Desktop/3 course/aks/Agro-Drone-Tech",
     "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
