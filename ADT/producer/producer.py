@@ -15,8 +15,10 @@ while not producer:
         logging.info("Попытка подключения к Kafka...")
         producer = KafkaProducer(
             bootstrap_servers=[os.getenv("KAFKA_BROKER", "kafka:9092")],
+            acks='all',
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
         )
+
         logging.info("Успешное подключение к Kafka")
     except Exception as e:
         logging.error(f"Kafka недоступен, повторная попытка... Ошибка: {e}")
@@ -45,7 +47,7 @@ for filename in os.listdir(image_folder):
             }
             producer.send('image_topic', message)
             logging.info(f'Изображение {filename} отправлено в Kafka')
-        time.sleep(2)
+        time.sleep(4)  # Ожидание 10 секунд перед началом отправки сообщений
 
 logging.info("Завершение работы producer.py")
 producer.close()

@@ -31,17 +31,16 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      consumer:
+        condition: service_started
     environment:
       - KAFKA_BROKER=kafka:9092
     volumes:
       - ./producer/images_to_send:/app/images_to_send
-#    entrypoint: >
-#      /bin/bash -c "
-#      while ! kafka-topics.sh --bootstrap-server kafka:9092 --list; do sleep 5; done;
-#      python producer.py"
     networks:
       - kafka_network
     restart: "no"
+
 
   consumer:
     build: ./consumer
