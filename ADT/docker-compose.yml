@@ -51,10 +51,6 @@ services:
       - KAFKA_BROKER=kafka:9092
     volumes:
       - ./consumer/model:/app/model
-#    entrypoint: >
-#      /bin/bash -c "
-#      while ! kafka-topics.sh --bootstrap-server kafka:9092 --list; do sleep 5; done;
-#      python consumer.py"
     networks:
       - kafka_network
     restart: always

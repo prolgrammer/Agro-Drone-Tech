@@ -1,0 +1,202 @@
+version: '3.8'
+
+services:
+  # Первый Kafka сервис с конфигурацией
+  kafka:
+    image: bitnami/kafka:latest
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    volumes:
+      - ./data/kafka:/bitnami/kafka
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - backend
+
+  # Сервисы producer и consumer
+  producer:
+    build: ./ADT/producer
+    depends_on:
+      kafka:
+        condition: service_healthy
+      consumer:
+        condition: service_started
+    environment:
+      - KAFKA_BROKER=kafka:9092
+    volumes:
+      - ./producer/images_to_send:/app/images_to_send
+    networks:
+      - backend
+    restart: "no"
+
+  consumer:
+    build: ./ADT/consumer
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      - KAFKA_BROKER=kafka:9092
+    volumes:
+      - ./consumer/model:/app/model
+    networks:
+      - backend
+    restart: always
+
+  # Сервисы из второго композ файла
+  auth-service:
+    build:
+      context: ./tasks-manager-main/tasks-manager
+      dockerfile: ./auth-service/Dockerfile
+    container_name: auth-service
+    ports:
+      - 8081:8080
+    networks:
+      - backend
+    depends_on:
+      - config-server
+      - postgresdb
+      - kafka
+      - redis
+
+  orchestrator:
+    build:
+      context: ./tasks-manager-main/tasks-manager
+      dockerfile: ./orchestrator/Dockerfile
+    container_name: orchestrator
+    ports:
+      - 8082:8080
+    networks:
+      - backend
+    depends_on:
+      - config-server
+      - postgresdb
+      - kafka
+      - redis
+
+  user-service:
+    build:
+      context: ./tasks-manager-main/tasks-manager
+      dockerfile: ./user-service/Dockerfile
+    container_name: user-service
+    ports:
+      - 8083:8080
+    networks:
+      - backend
+    depends_on:
+      - config-server
+      - postgresdb
+      - kafka
+
+  uuid-service:
+    build:
+      context: ./tasks-manager-main/tasks-manager
+      dockerfile: ./uuid-service/Dockerfile
+    container_name: uuid-service
+    ports:
+      - 8084:8080
+    networks:
+      - backend
+    depends_on:
+      - config-server
+      - postgresdb
+      - kafka
+
+  gateway:
+    build:
+      context: ./tasks-manager-main/tasks-manager
+      dockerfile: ./gateway/Dockerfile
+    container_name: gateway
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+    depends_on:
+      - config-server
+      - postgresdb
+      - kafka
+
+  config-server:
+    build:
+      context: ./tasks-manager-main/tasks-manager
+      dockerfile: ./config-server/Dockerfile
+    container_name: config-server
+    ports:
+      - 8888:8888
+    networks:
+      - backend
+    healthcheck:
+      test: "curl -sf http://localhost:8888/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  discovery-server:
+    build:
+      context: ./tasks-manager-main/tasks-manager
+      dockerfile: ./discovery-server/Dockerfile
+    container_name: discovery-server
+    ports:
+      - 8761:8761
+    networks:
+      - backend
+
+  postgresdb:
+    image: postgres
+    restart: always
+    volumes:
+      - postgresdb-data:/var/lib/postgresql/data
+      - ./tasks-manager-main/tasks-manager/postgresdb/init.sql:/docker-entrypoint-initdb.d/init.sql  
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+    environment:
+      - REDIS_USER=redis
+      - REDIS_PASSWORD=1234
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+
+volumes:
+  postgresdb-data:
+  kafka-data:
+  redis-data:
+
+networks:
+  backend:
+    driver: bridge
