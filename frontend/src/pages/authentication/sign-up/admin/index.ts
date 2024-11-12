@@ -1,0 +1,1 @@
+export { SignUpAdminPage } from './page'
