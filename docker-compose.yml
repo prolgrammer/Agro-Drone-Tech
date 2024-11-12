@@ -8,24 +8,26 @@ services:
       - "9092:9092"
       - "9093:9093"
     environment:
-      - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=abracadabra
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9090,EXTERNAL://kafka:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
-      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - ./data/kafka:/bitnami/kafka
+      - ./ADT/data/kafka:/bitnami/kafka
+      - kafka-data:/bitnami/kafka
+    networks:
+      - backend
     healthcheck:
       test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
       interval: 10s
       retries: 5
       start_period: 30s
       timeout: 5s
-    networks:
-      - backend
 
   # Сервисы producer и consumer
   producer:
@@ -38,7 +40,7 @@ services:
     environment:
       - KAFKA_BROKER=kafka:9092
     volumes:
-      - ./producer/images_to_send:/app/images_to_send
+      - ./ADT/producer/images_to_send:/app/images_to_send
     networks:
       - backend
     restart: "no"
@@ -51,7 +53,7 @@ services:
     environment:
       - KAFKA_BROKER=kafka:9092
     volumes:
-      - ./consumer/model:/app/model
+      - ./ADT/consumer/model:/app/model
     networks:
       - backend
     restart: always
