@@ -1,0 +1,1 @@
+export { UserArchivePage } from './page' 

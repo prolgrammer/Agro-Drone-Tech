@@ -1,0 +1,30 @@
+::-webkit-scrollbar {
+  width: 15px; 
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.2) inset;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0B6623;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-button {
+  background-color: #f1f1f1;
+  height: 16px;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray"><path d="M7 15l5-5 5 5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
