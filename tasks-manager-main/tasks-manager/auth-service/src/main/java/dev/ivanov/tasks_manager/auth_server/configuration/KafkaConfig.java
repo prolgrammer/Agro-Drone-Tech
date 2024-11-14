@@ -58,4 +58,12 @@ public class KafkaConfig {
                 .build();
     }
 
+    //TODO DELETE
+    @Bean
+    public NewTopic fileSend() {
+        return TopicBuilder.name("image_topic")
+                .partitions(3)
+                .build();
+    }
+
 }

@@ -5,6 +5,7 @@ import dev.ivanov.tasks_manager.auth_server.exceptions.AccountNotFoundException;
 import dev.ivanov.tasks_manager.auth_server.exceptions.AuthorizationException;
 import dev.ivanov.tasks_manager.auth_server.services.AccountService;
 import dev.ivanov.tasks_manager.auth_server.services.AuthService;
+import dev.ivanov.tasks_manager.auth_server.services.FileSendService;
 import dev.ivanov.tasks_manager.auth_server.validators.ChangePasswordDtoValidator;
 import dev.ivanov.tasks_manager.auth_server.validators.RefreshDtoValidator;
 import dev.ivanov.tasks_manager.auth_server.validators.SignUpDtoValidator;
@@ -15,6 +16,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,6 +32,9 @@ public class AuthController {
 
     @Autowired
     private SignUpDtoValidator signUpDtoValidator;
+
+    @Autowired
+    private FileSendService fileSendService;
 
     @Autowired
     private ChangePasswordDtoValidator changePasswordDtoValidator;
@@ -89,6 +96,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok().build();
+    }
+
+    //TODO DELETE
+    @PostMapping("/upload")
+    public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        fileSendService.sendFileToKafka("image_topic", file);  // Отправка байтовых данных
+        return "File uploaded successfully";
     }
 
     @DeleteMapping("/delete-account/{accountId}")

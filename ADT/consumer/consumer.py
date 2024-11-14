@@ -47,7 +47,7 @@ consumer = KafkaConsumer(
     bootstrap_servers=[os.getenv("KAFKA_BROKER", "kafka:9092")],
     auto_offset_reset='earliest',
     enable_auto_commit=False,
-    group_id='image_processing_group',
+    group_id='auth.service',
     value_deserializer=lambda m: json.loads(m.decode('utf-8')),
     fetch_min_bytes=1,
     fetch_max_wait_ms=50
@@ -65,6 +65,13 @@ def process_message(message):
     with lock:
         try:
             logging.info("Обработка сообщения начата")
+
+            json_message = message.value
+
+            # Вывод JSON сообщения в красивом формате
+            logging.info("Получено JSON сообщение:")
+            print(json.dumps(json_message, indent=4, ensure_ascii=False))
+
             user_id = message.value.get("user_id")
             field_id = message.value.get("field_id")
             coordinates = message.value.get("coordinates", {})
