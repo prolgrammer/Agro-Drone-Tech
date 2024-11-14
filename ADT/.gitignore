@@ -1,0 +1,5 @@
+/data/kafka/data/_*/
+/data/kafka/data/account*/
+/data/kafka/data/image*/
+/data/kafka/data/token*/
+/data/kafka/data/user*/
