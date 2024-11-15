@@ -1,65 +1,89 @@
-import { InputField } from "@shared/inputs"
-import { useForm } from "effector-forms"
-import { $$form } from "./model"
-import { Button, Form } from "antd"
+import { Button, Form, Input, message } from "antd"
 import { styled } from "styled-components"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { signInThunk } from "@entities/slices/auth-slice"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "app/store"
+import Cookies from 'js-cookie'
 
 export const LogInForm = () => {
-  const { fields } = useForm($$form)
+  const navigate = useNavigate()
+  const dispatch: AppDispatch = useDispatch()
+
+  const onFinish = async (data: any) => {
+    try {
+      const response = await dispatch(signInThunk(data)).unwrap()
+      message.success({
+        content: 'Вы успешно вошли',
+      })
+      Cookies.set('token', response)
+      navigate('/private-office/profile')
+    } catch (error) {
+      message.error({
+        content: 'Произошла ошибка при входе'
+      })
+      console.log(error)
+    }
+  }
+    
+  const rules = [{
+    required: true,
+    message: 'Вы пропустили обязательное поле'
+  }]
+
   return (
     <Box>
       <Title>
         Вход
       </Title>
 
-      <StyledForm>
-        <InputField
-          placeholder="Логин"
-          field={fields.login}
-          size="large"
-        />
-        <InputField
-          placeholder="Пароль"
-          field={fields.password}
-          size="large"
-        />
-      </StyledForm>
+      <Form  layout="vertical" size="large" onFinish={onFinish}>
+        <Form.Item
+          name="username"
+          label="Имя"
+          rules={rules}
+        >
+          <Input
+            placeholder="Иван"
+          />
+        </Form.Item>
 
-      <Button type="primary" block style={{ borderRadius: '30px', width: '10%', margin: '29px auto 0px auto' }}>
-        Продолжить
-      </Button>
+        <Form.Item
+          name="password"
+          label="Пароль"
+          rules={rules}
+        >
+          <Input.Password
+            placeholder="12345678"
+          />
+        </Form.Item>
+        
+        <Button type="primary" block htmlType="submit">
+          Продолжить
+        </Button>
+      </Form>
 
       <Registrate>
         <span>Еще нет аккаунта?</span> 
         <Link to={"/sign-up"}>
-        <span style={{ color: '#0B6623', marginLeft: '5px' }}>Зарегистрироваться</span>
+          <span style={{ color: '#0B6623', marginLeft: '5px' }}>Зарегистрироваться</span>
         </Link>
       </Registrate>
     </Box>
   )
 }
 
-const Registrate = styled(Form)`
+const Registrate = styled.div`
   margin: 44px auto 0 auto;
 `
-const StyledForm = styled(Form)`
-  width: 20%;
-  margin: auto; 
-   & > *:not(:last-child) {
-    margin-bottom: 16px; 
-  }
-  margin-top: 50px;
-`
-
 const Box = styled.div`
   border-top: 2px solid #0B6623;
   padding: 80px 20px 130px;
   display: flex;
   flex-direction: column;
   justify-items: center;
+  align-items: center;
 `
-
 const Title = styled.div`
   margin: 0 auto; 
   color: #0B6623;

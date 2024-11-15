@@ -4,21 +4,24 @@ import 'antd/dist/reset.css'
 import { ConfigProvider } from 'antd'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './routes'
+import { Provider as ReduxProvider} from 'react-redux'
+import { store } from "./store"
 import './index.css'
-// import { SessionProvider } from '@widgets/session/session-provider'
 
 const customTheme = {
   token: {
     colorPrimary: '#0B6623',
-  },
+  },  
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ConfigProvider theme={customTheme}>
-      {/* <SessionProvider> */}
-        <RouterProvider router={router} />
-      {/* </SessionProvider> */}
+    <ReduxProvider store={store}>
+        {/* <AccessProvider> */}
+          <RouterProvider router={router} />
+        {/* </AccessProvider> */}
+      </ReduxProvider>
     </ConfigProvider>
   </React.StrictMode>
 )

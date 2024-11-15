@@ -13,9 +13,6 @@ services:
       - backend
     depends_on:
       - gateway
-    environment:
-      - REACT_APP_API_URL=http://gateway:8080
-    restart: always
 
   # Первый Kafka сервис с конфигурацией
   kafka:
