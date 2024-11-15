@@ -8,16 +8,11 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "3000:3000"  # Прокси порта фронтенда на хост
+      - "3000:3000"
     networks:
-      - backend  # Подключаем к той же сети, что и остальные сервисы
+      - backend
     depends_on:
-      - gateway  # Допустим, фронтенд зависит от gateway, если он нужен для API
-    volumes:
-      - ./frontend:/usr/local/app  # Монтируем локальную директорию в контейнер (если нужно)
-    environment:
-      - REACT_APP_API_URL=http://gateway:8080  # Пример настройки переменных окружения для API
-    restart: always  # Перезапускать контейнер, если он выходит из строя
+      - gateway
 
   # Первый Kafka сервис с конфигурацией
   kafka:

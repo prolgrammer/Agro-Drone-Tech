@@ -18,11 +18,11 @@ export const Header = () => {
       <Link to={"/"}>
         <img src={logo} alt="logo" />
       </Link>
-      <Flex gap={20} style={{ width: '40%' }}>
-        <LoginButton type="primary" onClick={handleGoLogIn}>
+      <Flex>
+        <LoginButton type="primary" onClick={handleGoLogIn} size='large'>
           Войти
         </LoginButton>
-        <LoginButton type="primary" onClick={handleGoSignUp}>
+        <LoginButton type="primary" onClick={handleGoSignUp} size='large'>
           Зарегистрироваться
         </LoginButton>
       </Flex>
@@ -40,8 +40,6 @@ const Wrapper = styled.div`
 `
 const LoginButton = styled(Button)`
   border-radius: 30px;
-  height: 45px;
-  width: 30vh;
   color: #0B6623;
   background-color: white;
   margin-right: 40px;

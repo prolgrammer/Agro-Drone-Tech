@@ -1,10 +1,10 @@
-FROM node:20.14
+FROM node:20.14-alpine
 
 WORKDIR /usr/local/app
 
 COPY . .
 
-RUN npm install --force
+RUN npm ci --force
 
 RUN npm run build
 
