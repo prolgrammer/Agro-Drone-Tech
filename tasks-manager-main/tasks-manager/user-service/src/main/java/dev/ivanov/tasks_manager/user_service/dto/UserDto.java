@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class UserDto {
     private String id;
-    private String nickname;
+    private String username;
     private String name;
     private String surname;
     private String email;
@@ -18,7 +18,7 @@ public class UserDto {
     public static UserDto from(User user) {
         return UserDto.builder()
                 .id(user.getId())
-                .nickname(user.getNickname())
+                .username(user.getNickname())
                 .name(user.getName())
                 .surname(user.getSurname())
                 .email(user.getEmail())
