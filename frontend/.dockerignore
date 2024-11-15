@@ -47,7 +47,6 @@ desktop.ini
 .editorconfig
 
 # Пакеты и зависимости
-package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
