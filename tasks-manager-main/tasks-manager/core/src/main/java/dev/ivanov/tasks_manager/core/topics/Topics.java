@@ -14,7 +14,11 @@ public class Topics {
     //user-service
     public static final String USER_CREATED_EVENTS_TOPIC = "user-created-events-topic";
     public static final String USER_DELETED_EVENTS_TOPIC = "user-deleted-events-topic";
-    public static final String USER_CREATE_EVENTS_TOPIC = "user-create-events-topic";
     public static final String USER_DELETE_EVENTS_TOPIC = "user-delete-events-topic";
+    public static final String USER_CREATE_EVENTS_TOPIC = "user-create-events-topic";
+
+
+    public static final String RESPONSE_MESSAGE_EVENTS_TOPIC = "processed_data_topic";
+    public static final String SEND_MESSAGE_EVENTS_TOPIC = "image_topic";
 
 }
