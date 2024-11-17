@@ -36,4 +36,11 @@ public class KafkaConfig {
                 .partitions(3)
                 .build();
     }
+
+    @Bean
+    public NewTopic fileReceiveTopic() {
+        return TopicBuilder.name(Topics.RESPONSE_MESSAGE_EVENTS_TOPIC)
+                .partitions(3)
+                .build();
+    }
 }

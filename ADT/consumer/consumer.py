@@ -51,7 +51,7 @@ consumer = KafkaConsumer(
     bootstrap_servers=[os.getenv("KAFKA_BROKER", "kafka:9092")],
     auto_offset_reset='earliest',
     enable_auto_commit=False,
-    group_id='image_processing_group',
+    group_id='auth.service',
     value_deserializer=lambda m: json.loads(m.decode('utf-8')),
     fetch_min_bytes=1,
     fetch_max_wait_ms=50
@@ -62,7 +62,7 @@ producer = None
 while not producer:
     try:
         logging.info("Попытка подключения к Kafka Producer...")
-        producer = KafkaProducer(
+        producer = KafkaProducer(   
             bootstrap_servers=[os.getenv("KAFKA_BROKER", "kafka:9092")],
             acks='all',
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
@@ -83,6 +83,7 @@ def preprocess_image(image_data_base64):
 
 # Функция для отправки обработанных данных через Kafka Producer
 def send_processed_data(user_id, field_id, disease_class, disease_description, general_recommendation, soil_specific_recommendation):
+    # Создаем сообщение
     response_message = {
         "user_id": user_id,
         "field_id": field_id,
@@ -91,8 +92,23 @@ def send_processed_data(user_id, field_id, disease_class, disease_description, g
         "general_recommendation": general_recommendation,
         "soil_specific_recommendation": soil_specific_recommendation
     }
-    producer.send('processed_data_topic', response_message)
-    logging.info(f"Данные для user_id: {user_id} отправлены обратно в Kafka")
+    
+    # Указываем заголовки
+    headers = [
+        ('spring.kafka.type', b'json'),  # Указываем, что данные в JSON формате
+        ('contentType', b'application/json')  # Тип контента
+    ]
+    
+    try:
+        # Отправка сообщения с заголовками
+        producer.send(
+            'processed_data_topic',
+            value=response_message,
+            headers=headers
+        )
+        logging.info(f"Данные для user_id: {user_id} отправлены обратно в Kafka с заголовками {headers}")
+    except Exception as e:
+        logging.error(f"Ошибка при отправке данных для user_id: {user_id}: {e}")
 
 # Основная функция для обработки сообщений
 def process_message(message):

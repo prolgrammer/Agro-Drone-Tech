@@ -61,7 +61,7 @@ public class KafkaConfig {
     //TODO DELETE
     @Bean
     public NewTopic fileSend() {
-        return TopicBuilder.name("image_topic")
+        return TopicBuilder.name(Topics.SEND_MESSAGE_EVENTS_TOPIC)
                 .partitions(3)
                 .build();
     }

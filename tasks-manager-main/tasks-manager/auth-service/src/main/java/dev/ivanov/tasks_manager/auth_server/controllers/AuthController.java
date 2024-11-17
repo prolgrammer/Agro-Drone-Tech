@@ -6,11 +6,15 @@ import dev.ivanov.tasks_manager.auth_server.exceptions.AuthorizationException;
 import dev.ivanov.tasks_manager.auth_server.services.AccountService;
 import dev.ivanov.tasks_manager.auth_server.services.AuthService;
 import dev.ivanov.tasks_manager.auth_server.services.FileSendService;
+import dev.ivanov.tasks_manager.auth_server.services.ResponseMessageService;
 import dev.ivanov.tasks_manager.auth_server.validators.ChangePasswordDtoValidator;
 import dev.ivanov.tasks_manager.auth_server.validators.RefreshDtoValidator;
 import dev.ivanov.tasks_manager.auth_server.validators.SignUpDtoValidator;
+import dev.ivanov.tasks_manager.core.events.auth.ResponseMessageEvent;
+import dev.ivanov.tasks_manager.core.topics.Topics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,6 +46,9 @@ public class AuthController {
     @Autowired
     private RefreshDtoValidator refreshDtoValidator;
 
+    @Autowired
+    private ResponseMessageService responseMessageService;
+
     @PostMapping("/refresh/{accountId}")
     public ResponseEntity<?> refresh(@RequestBody RefreshDto refreshDto,
                                      @PathVariable String accountId) {
@@ -65,7 +72,7 @@ public class AuthController {
             var tokenDto = authService.signIn(signInDto);
             return ResponseEntity.ok(tokenDto);
         } catch (AuthorizationException | AuthenticationException | AccountNotFoundException e) {
-            return ResponseEntity.badRequest().body("authentication error");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("authentication error");
         }
     }
 
@@ -101,8 +108,19 @@ public class AuthController {
     //TODO DELETE
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        fileSendService.sendFileToKafka("image_topic", file);  // Отправка байтовых данных
+        fileSendService.sendFileToKafka(Topics.SEND_MESSAGE_EVENTS_TOPIC, file);  // Отправка байтовых данных
         return "File uploaded successfully";
+    }
+
+    @GetMapping("/result/{userId}")
+    public ResponseEntity<ResponseMessageEvent> getResponseMessageByUserId(@PathVariable String userId) {
+        ResponseMessageEvent event = responseMessageService.getEventByUserId(userId);
+
+        if (event != null) {
+            return ResponseEntity.ok(event);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/delete-account/{accountId}")
