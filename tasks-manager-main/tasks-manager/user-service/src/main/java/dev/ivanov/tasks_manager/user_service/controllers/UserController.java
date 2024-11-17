@@ -9,6 +9,7 @@ import dev.ivanov.tasks_manager.user_service.validators.UserUpdateDtoValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +45,7 @@ public class UserController {
             var updatedUser = userService.updateUser(userId, userUpdateDto);
             return ResponseEntity.ok(UserDto.from(updatedUser));
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }

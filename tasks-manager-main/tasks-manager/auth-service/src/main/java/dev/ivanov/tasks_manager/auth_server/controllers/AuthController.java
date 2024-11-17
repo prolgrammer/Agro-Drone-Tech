@@ -72,7 +72,7 @@ public class AuthController {
             var tokenDto = authService.signIn(signInDto);
             return ResponseEntity.ok(tokenDto);
         } catch (AuthorizationException | AuthenticationException | AccountNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("authentication error");
+            return ResponseEntity.badRequest().body("authentication error");
         }
     }
 
