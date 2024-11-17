@@ -29,3 +29,13 @@ export const signIn = async (data: LoginDTO) => {
         data: data
     }).then(response => response.data)
 }
+
+export const refreshToken = async (accountId: string, refreshToken: string) => {
+    console.log('work!')
+    return await $api.request({
+      method: "POST",
+      url: `${prefix}/refresh/${accountId}`,
+      data: {refreshToken: refreshToken}
+    }).then(response => response.data);
+  };
+  
