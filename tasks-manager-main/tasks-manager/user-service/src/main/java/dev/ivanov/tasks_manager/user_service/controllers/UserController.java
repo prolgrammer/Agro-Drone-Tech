@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<?> get(@PathVariable String userId) {
         var userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty())
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         else return ResponseEntity.ok(UserDto.from(userOptional.get()));
     }
 

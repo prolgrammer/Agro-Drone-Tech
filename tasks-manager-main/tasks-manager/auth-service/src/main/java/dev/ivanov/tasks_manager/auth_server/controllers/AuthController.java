@@ -3,6 +3,7 @@ package dev.ivanov.tasks_manager.auth_server.controllers;
 import dev.ivanov.tasks_manager.auth_server.dto.*;
 import dev.ivanov.tasks_manager.auth_server.exceptions.AccountNotFoundException;
 import dev.ivanov.tasks_manager.auth_server.exceptions.AuthorizationException;
+import dev.ivanov.tasks_manager.auth_server.exceptions.JWTException;
 import dev.ivanov.tasks_manager.auth_server.services.AccountService;
 import dev.ivanov.tasks_manager.auth_server.services.AuthService;
 import dev.ivanov.tasks_manager.auth_server.services.FileSendService;
@@ -53,17 +54,22 @@ public class AuthController {
     public ResponseEntity<?> refresh(@RequestBody RefreshDto refreshDto,
                                      @PathVariable String accountId) {
         var errors = new BeanPropertyBindingResult(refreshDto, "refreshDto");
-        refreshDtoValidator.validate(refreshDto, errors);
-        if (errors.hasErrors())
-            return ResponseEntity.badRequest().body(errors.getAllErrors()
-                    .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList());
+        try {
+            refreshDtoValidator.validate(refreshDto, errors);
+            if (errors.hasErrors()) {
+                return ResponseEntity.badRequest().body(errors.getAllErrors()
+                        .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList());
+            }
 
-        var access = authService.refresh(accountId);
-        return ResponseEntity.ok(
-                TokenDto.builder()
-                        .access(access)
-                        .build()
-        );
+            var access = authService.refresh(accountId);
+            return ResponseEntity.ok(
+                    TokenDto.builder()
+                            .access(access)
+                            .build()
+            );
+        } catch (JWTException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("UNAUTHORIZED", e.getMessage()));
+        }
     }
 
     @PostMapping("/sign-in")
