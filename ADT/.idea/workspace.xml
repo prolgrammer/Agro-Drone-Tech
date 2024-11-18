@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b06d5428-2d06-4a27-88a1-925e7aa1b477" name="Changes" comment="" />
+    <list default="true" id="b06d5428-2d06-4a27-88a1-925e7aa1b477" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/ADT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ADT.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/consumer/consumer.py" beforeDir="false" afterPath="$PROJECT_DIR$/consumer/consumer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/producer/producer.py" beforeDir="false" afterPath="$PROJECT_DIR$/producer/producer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tasks-manager-main/tasks-manager/auth-service/src/main/java/dev/ivanov/tasks_manager/auth_server/consumers/AccountEventsConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tasks-manager-main/tasks-manager/auth-service/src/main/java/dev/ivanov/tasks_manager/auth_server/consumers/AccountEventsConsumer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +23,9 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -32,9 +42,15 @@
   "keyToString": {
     "Python.consumer.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/ib1te/Desktop/3 course/aks/Agro-Drone-Tech",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "git-widget-placeholder": "resolver",
+    "last_opened_file_path": "D:/PetProjects/AgroDroneTech/ADT",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -50,7 +66,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-975db3bf15a3-31b6be0877a2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.18034.82" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.82" />
+        <option value="bundled-python-sdk-975db3bf15a3-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.82" />
       </set>
     </attachedChunks>
   </component>
@@ -62,7 +79,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1730802326472</updated>
+      <workItem from="1731957565014" duration="3237000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

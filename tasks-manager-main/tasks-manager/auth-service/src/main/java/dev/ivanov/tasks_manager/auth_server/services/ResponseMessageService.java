@@ -12,7 +12,7 @@ public class ResponseMessageService {
 
     // Метод для сохранения события
     public void saveEvent(ResponseMessageEvent event) {
-        eventsStore.put(event.getUser_id(), event); // Используем user_id как ключ
+        eventsStore.put(event.getUserId(), event); // Используем user_id как ключ
     }
 
     // Метод для получения события по user_id

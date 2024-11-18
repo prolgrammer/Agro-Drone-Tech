@@ -9,6 +9,11 @@ logging.basicConfig(level=logging.INFO)
 
 logging.info("Запуск producer.py начат")
 
+# Условие для временного выключения продюсера
+TEMP_DISABLE_PRODUCER = True  # Установите True для отключения
+
+if TEMP_DISABLE_PRODUCER:
+    logging.info("Продюсер временно отключен.")
 producer = None
 while not producer:
     try:
