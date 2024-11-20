@@ -2,6 +2,7 @@ package dev.ivanov.tasks_manager.auth_server.validators;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import dev.ivanov.tasks_manager.auth_server.dto.RefreshDto;
+import dev.ivanov.tasks_manager.auth_server.exceptions.JWTException;
 import dev.ivanov.tasks_manager.auth_server.security.JwtUtils;
 import dev.ivanov.tasks_manager.core.security.JwtAuthenticationToken;
 import jakarta.annotation.Nonnull;
@@ -30,10 +31,11 @@ public class RefreshDtoValidator implements Validator {
             var id = claims.get("id").asString();
             var authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             var accountId = authentication.getId();
-            if (!accountId.equals(id))
-                errors.reject("refresh", "incorrect account id in refresh");
+            if (!accountId.equals(id)) {
+                throw new JWTException("неверный идентификатор аккаунта в refresh");
+            }
         } catch (JWTVerificationException e) {
-            errors.reject("refresh", "incorrect refresh");
+            throw new JWTException("неверный refresh token");
         }
     }
 }
