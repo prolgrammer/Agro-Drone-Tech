@@ -62,7 +62,7 @@ producer = None
 while not producer:
     try:
         logging.info("Попытка подключения к Kafka Producer...")
-        producer = KafkaProducer(   
+        producer = KafkaProducer(
             bootstrap_servers=[os.getenv("KAFKA_BROKER", "kafka:9092")],
             acks='all',
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
@@ -92,13 +92,19 @@ def send_processed_data(user_id, field_id, disease_class, disease_description, g
         "general_recommendation": general_recommendation,
         "soil_specific_recommendation": soil_specific_recommendation
     }
-    
+
     # Указываем заголовки
     headers = [
-        ('spring.kafka.type', b'json'),  # Указываем, что данные в JSON формате
-        ('contentType', b'application/json')  # Тип контента
+        ('__TypeId__', b'dev.ivanov.tasks_manager.core.events.auth.ResponseMessageEvent'),
+        ('contentType', b'application/json'), # Указание типа содержимого
+        ('user_id', str(user_id).encode('utf-8')),  # Преобразование в байты
+        ('field_id', str(field_id).encode('utf-8')),  # Преобразование в байты
+        ('disease_class', str(disease_class).encode('utf-8')),  # Преобразование в байты
+        ('disease_description', str(disease_description).encode('utf-8')),  # Преобразование в байты
+        ('general_recommendation', str(general_recommendation).encode('utf-8')),  # Преобразование в байты
+        ('soil_specific_recommendation', str(soil_specific_recommendation).encode('utf-8'))  # Преобразование в байты
     ]
-    
+
     try:
         # Отправка сообщения с заголовками
         producer.send(
@@ -122,8 +128,8 @@ def process_message(message):
             crop_type = message.value.get("crop_type")
             image_data_base64 = message.value.get("image_data")
 
-            if not image_data_base64:
-                logging.error("Изображение отсутствует в сообщении.")
+            if not all([user_id, field_id, image_data_base64]):
+                logging.error("Сообщение содержит недостаточно данных.")
                 return
 
             # Предобработка изображения и предсказание

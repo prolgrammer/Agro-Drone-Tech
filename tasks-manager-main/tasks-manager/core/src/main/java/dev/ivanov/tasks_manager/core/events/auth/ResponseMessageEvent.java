@@ -1,5 +1,6 @@
 package dev.ivanov.tasks_manager.core.events.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ResponseMessageEvent {
-    private String user_id;
-    private String field_id;
+    @JsonProperty("user_id")
+    private String userId;
+    @JsonProperty("field_id")
+    private String fieldId;
     private String disease_class;
     private String disease_description;
     private String general_recommendation;

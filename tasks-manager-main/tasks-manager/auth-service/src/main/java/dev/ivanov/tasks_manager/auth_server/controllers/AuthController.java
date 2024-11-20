@@ -118,6 +118,7 @@ public class AuthController {
         return "File uploaded successfully";
     }
 
+    //TODO DELETE
     @GetMapping("/result/{userId}")
     public ResponseEntity<ResponseMessageEvent> getResponseMessageByUserId(@PathVariable String userId) {
         ResponseMessageEvent event = responseMessageService.getEventByUserId(userId);
