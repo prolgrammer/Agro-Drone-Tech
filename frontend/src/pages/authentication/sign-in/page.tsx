@@ -1,11 +1,11 @@
+import { SignIn } from "@widgets/form-block"
 import { SiteLayout } from "@widgets/layouts/site-layout"
-import { LogInForm } from "@widgets/forms/log-in/log-in"
 
-export const LogInPage = () => {
+export const SignInPage = () => {
 
   return (
     <SiteLayout>
-      <LogInForm/>
+      <SignIn/>
     </SiteLayout>
   )
 }

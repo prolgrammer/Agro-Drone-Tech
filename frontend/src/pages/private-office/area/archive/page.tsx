@@ -1,6 +1,6 @@
 import { InputField } from "@shared/inputs"
-import { PrivateWrapper } from "@shared/private-wrapper"
 import { ArchiveLayout } from "@widgets/layouts/archive-layout"
+import { FormWrapper } from "@shared/form-wrapper"
 
 export const AreaArchivePage = () => {
   return (
@@ -8,10 +8,8 @@ export const AreaArchivePage = () => {
       title="Мои участки" 
       route="/private-office/area/create"
     >
-      <PrivateWrapper
+      <FormWrapper
         title={"Участок под пшеницу"}
-        buttonText="Редактировать"
-        route="/private-office/area/single"
       >
         <InputField 
           label="Название"
@@ -25,12 +23,10 @@ export const AreaArchivePage = () => {
         <InputField 
           label="Посаженные культуры"
         />
-      </PrivateWrapper>
+      </FormWrapper>
 
-      <PrivateWrapper 
+      <FormWrapper 
         title={"Новый пустой участок"}
-        buttonText="Редактировать"
-        route="/private-office/area/:id"
       >
         <InputField 
           label="Название"
@@ -44,12 +40,10 @@ export const AreaArchivePage = () => {
         <InputField 
           label="Посаженные культуры"
         />
-      </PrivateWrapper>
+      </FormWrapper>
 
-      <PrivateWrapper 
+      <FormWrapper 
         title={"Поле"}
-        buttonText="Редактировать"
-        route="/private-office/area/:id"
       >
         <InputField 
           label="Название"
@@ -63,7 +57,7 @@ export const AreaArchivePage = () => {
         <InputField 
           label="Посаженные культуры"
         />
-      </PrivateWrapper>
+      </FormWrapper>
     </ArchiveLayout>
   )
 }

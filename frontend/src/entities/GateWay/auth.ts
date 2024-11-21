@@ -1,4 +1,4 @@
-import { $api } from "@shared/axios-instanse";
+import { $api, $authApi } from "@shared/axios-instanse";
 
 export interface RegisterDTO {
     username: string
@@ -15,7 +15,7 @@ export interface LoginDTO {
 const prefix = "auth"
 
 export const signUp = async (data: RegisterDTO) => {
-    return await $api.request({
+    return await $authApi.request({
         method: "POST",
         url: `${prefix}/sign-up`,
         data: data
@@ -23,9 +23,25 @@ export const signUp = async (data: RegisterDTO) => {
 }
 
 export const signIn = async (data: LoginDTO) => {
-    return await $api.request({
+    return await $authApi.request({
         method: "POST",
         url: `${prefix}/sign-in`,
+        data: data
+    }).then(response => response.data)
+}
+
+export const refreshToken = async (accountId: string, refresh: {refresh: string}) => {
+    return await $authApi.request({
+        method: "POST",
+        url: `${prefix}/refresh/${accountId}`,
+        data: refresh
+    }).then(response => response.data)
+}
+
+export const changePassword = async (userId: string, data: {newPassword: string, refresh: string}) => {
+    return await $api.request({
+        method: "PUT",
+        url: `${prefix}/change-password/${userId}`,
         data: data
     }).then(response => response.data)
 }

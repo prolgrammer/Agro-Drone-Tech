@@ -1,5 +1,5 @@
 import { InputField } from "@shared/inputs"
-import { PrivateWrapper } from "@shared/private-wrapper"
+import { FormWrapper } from "@shared/form-wrapper"
 import { CreateLayout } from "@widgets/layouts/create-layout"
 import { Radio, RadioChangeEvent, Space } from "antd"
 import { useState } from "react"
@@ -17,8 +17,7 @@ export const AreaSinglePage = () => {
     <CreateLayout
       title="Редактирование участка"
     >
-      <PrivateWrapper
-        buttonText="Сохранить"
+      <FormWrapper
       >
         <Title>Название</Title>
         <InputField 
@@ -40,7 +39,7 @@ export const AreaSinglePage = () => {
         <InputField 
           label="Введите значение"
         />
-      </PrivateWrapper>
+      </FormWrapper>
     </CreateLayout>
   )
 }
