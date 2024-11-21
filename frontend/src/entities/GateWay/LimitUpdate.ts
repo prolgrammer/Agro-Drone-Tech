@@ -1,9 +1,9 @@
-interface LimitUpdateDTO{
-   dayLimit: number;
-   todayCount: number;
-}
+// interface LimitUpdateDTO{
+//    dayLimit: number;
+//    todayCount: number;
+// }
 
-const prefix = "limit/update"
+// const prefix = "limit/update"
 
-//AdminController
-//+ void updateLimit(LimitUpdateDto update) /admin/limit/{id} (put)
+// //AdminController 
+// //+ void updateLimit(LimitUpdateDto update) /admin/limit/{id} (put)

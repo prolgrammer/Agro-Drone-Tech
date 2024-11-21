@@ -1,27 +1,28 @@
+import { Button, Form } from "antd"
 import { styled } from "styled-components"
 import { Link, useNavigate } from "react-router-dom"
-import { SignInForm } from "@features/forms"
+import { SignUpForm } from "@features/forms"
 
-export const SignIn = () => {
+export const SignUp = () => {
   return (
     <Box>
       <Title>
-        Вход
+        Регистрация
       </Title>
 
-      <SignInForm />
+      <SignUpForm />
 
       <Registrate>
-        <span>Еще нет аккаунта?</span> 
-        <Link to={"/sign-up"}>
-          <span style={{ color: '#0B6623', marginLeft: '5px' }}>Зарегистрироваться</span>
+        <span>Уже есть аккаунт?</span>
+        <Link to={"/log-in"}>
+          <span style={{ color: '#0B6623', marginLeft: '5px' }}>Войти</span>
         </Link>
       </Registrate>
     </Box>
   )
 }
 
-const Registrate = styled.div`
+const Registrate = styled(Form)`
   margin: 44px auto 0 auto;
 `
 const Box = styled.div`

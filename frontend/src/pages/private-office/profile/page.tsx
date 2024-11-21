@@ -1,4 +1,4 @@
-import { Profile } from "@widgets/form-block/profile"
+import { Profile } from "@widgets/form-block"
 import { PrivateLayout } from "@widgets/layouts/private-layout"
 
 export const ProfilePage = () => {

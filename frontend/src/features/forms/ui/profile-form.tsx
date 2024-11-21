@@ -7,16 +7,17 @@
 
   export const ProfileForm = () => {
     const dispatch: AppDispatch = useDispatch()
+    const userId = useSelector((state: RootState) => state.token.id)
 
     useEffect(() => {
-      dispatch(getUserByIdThunk("12d50c0b-8e59-455d-8965-15e3b32d76f0")).unwrap()
+      dispatch(getUserByIdThunk(userId!)).unwrap()
     }, [dispatch])
 
     const { isLoading, user, error } = useSelector((state: RootState) => state.user)
 
     const onFinish = async (data: UserDTO) => {
       try {
-        await dispatch(updateUserThunk({ userId: "12d50c0b-8e59-455d-8965-15e3b32d76f0", data })).unwrap()
+        await dispatch(updateUserThunk({ userId: userId!, data })).unwrap()
         message.success({
           content: 'Данные успешно обновлены',
         })

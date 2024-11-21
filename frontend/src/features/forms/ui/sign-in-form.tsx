@@ -49,6 +49,7 @@ export const SignInForm = () => {
         name="password"
         label="Пароль"
         rules={rules}
+        hasFeedback
       >
         <Input.Password
           placeholder="12345678"

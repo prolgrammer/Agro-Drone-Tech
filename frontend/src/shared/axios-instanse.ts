@@ -1,54 +1,3 @@
-// import axios from "axios";
-// import Cookies from 'js-cookie';
-
-// export const $api = axios.create({
-//   baseURL: 'http://localhost:8080/api/',
-//   withCredentials: true,
-// })
-
-// $api.interceptors.request.use(
-//   (config) => {
-//     const token = Cookies.get('access')
-//     if (token) {
-//       config.headers['Authorization'] = `Bearer ${token}`
-//     }
-
-//     console.log(`
-//       Request:
-//       Method: ${config.method?.toUpperCase()}
-//       URL: ${config.baseURL}${config.url}
-//       Headers: ${JSON.stringify(config.headers, null, 2)}
-//       Data: ${JSON.stringify(config.data, null, 2)}
-//     `)
-
-//     return config
-//   },
-//   (error) => {
-//     console.error("Request Error:", error)
-//     return Promise.reject(error)
-//   }
-// )
-
-// $api.interceptors.response.use(
-//   (response) => {
-//     console.log(`
-//       Response:
-//       Status: ${response.status}
-//       Data: ${JSON.stringify(response.data, null, 2)}
-//     `);
-//     return response
-//   },
-//   (error) => {
-//     console.error(`
-//       Response Error:
-//       ${error.response ? `Status: ${error.response.status}` : ''}
-//       ${error.response ? `Data: ${JSON.stringify(error.response.data, null, 2)}` : ''}
-//       Message: ${error.message}
-//     `)
-//     return Promise.reject(error)
-//   }
-// )
-
 import { refreshToken } from "@entities/GateWay/auth";
 import axios from "axios";
 import Cookies from 'js-cookie';
@@ -59,7 +8,7 @@ export const $api = axios.create({
   withCredentials: true,
 })
 
-export const $refreshApi = axios.create({
+export const $authApi = axios.create({
   baseURL: 'http://localhost:8080/api/',
   withCredentials: true,
 })
@@ -101,8 +50,10 @@ $api.interceptors.request.use(
   }
 )
 
-interface UserJwtPayload extends JwtPayload {
-  id?: string
+export interface UserJwtPayload extends JwtPayload {
+  id?: string | null
+  username?: string | null
+  roles?: [] | null
 }
 
 $api.interceptors.response.use(
@@ -127,11 +78,13 @@ $api.interceptors.response.use(
     if ((error.response?.status === 401 || error.response?.status === 400) && !originalRequest._retry) {
       originalRequest._retry = true
 
-      if (error.response?.status === 400) {
+      if (error.response?.status === 400 || error.response?.status === 401) {
         try {
           const decoded = jwtDecode<UserJwtPayload>(Cookies.get('accessToken') as string)
           const userId = decoded?.id
-          const refresh = Cookies.get('refreshToken')
+          const refresh = {
+            refresh: Cookies.get('refreshToken') as string,
+          }
 
           if (userId && refresh) {
             const { access } = await refreshToken(userId, refresh)
