@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/auth/change-password").access(resourceAuthorizationManager())
                         .requestMatchers("/api/auth/delete-account/**").access(resourceAuthorizationManager())
+                        .requestMatchers("/api/auth/upload").authenticated()
                         .anyRequest().permitAll()
                 )
                 .anonymous(AbstractHttpConfigurer::disable)

@@ -113,9 +113,9 @@ public class AuthController {
 
     //TODO DELETE
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         fileSendService.sendFileToKafka(Topics.SEND_MESSAGE_EVENTS_TOPIC, file);  // Отправка байтовых данных
-        return "File uploaded successfully";
+        return ResponseEntity.ok().build();
     }
 
     //TODO DELETE

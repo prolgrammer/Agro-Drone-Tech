@@ -16,9 +16,8 @@ public class FileSendService {
     @Autowired
     private KafkaTemplate<String, FIleSendDTO> byteKafkaTemplate;
 
-    public void sendFileToKafka(String topic, MultipartFile file) throws IOException {
-        byte[] fileBytes = file.getBytes();
-        FIleSendDTO dto = new FIleSendDTO();
+    public void sendFileToKafka(MultipartFile file) throws IOException {
+        FIleSendDTO fileSendDto = new FIleSendDTO();
         dto.setImage_data(fileBytes);
         byteKafkaTemplate.send(topic, dto);
     }
